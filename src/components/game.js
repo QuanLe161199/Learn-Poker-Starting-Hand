@@ -127,7 +127,7 @@ const Game = () => {
                 </tbody>
             </table>
             <div className="text">
-                {index == 28
+                {index == 33
                     ? "Congratulations! You will become a pro-player in the future"
                     : `You have found ${index} strongest starting hands`}
             </div>
