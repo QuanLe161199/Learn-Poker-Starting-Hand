@@ -36,7 +36,7 @@ const HAND_SORT = [
     ["KTo", 4],
 ];
 
-const COLOR = ["white", "#12900d", "#bf7c18", "#e4d618"];
+const COLOR = ["white", "#12900d", "#bf7c18", "#e4d618", "#5e59e4"];
 
 const Game = () => {
     const [table, setTable] = useState(null);
