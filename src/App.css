@@ -1,4 +1,12 @@
-table,
+.container {
+    margin-right: 30px;
+}
+
+table {
+    margin: auto;
+    margin-top: 100px;
+}
+
 td {
     border: 1px solid black;
     text-align: center;
@@ -9,6 +17,8 @@ td {
 }
 
 .text {
-    font-weight: bold;
+    margin: auto;
+    width: fit-content;
     color: #145514;
+    font-weight: bold;
 }

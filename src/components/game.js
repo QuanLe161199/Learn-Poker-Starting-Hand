@@ -95,7 +95,7 @@ const Game = () => {
     };
 
     return (
-        <div>
+        <div className="container">
             <table>
                 <tbody>
                     {table?.map((row) => {
