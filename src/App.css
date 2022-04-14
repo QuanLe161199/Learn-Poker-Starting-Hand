@@ -1,10 +1,10 @@
 .row {
     margin-right: 30px;
+    margin-top: 80px;
 }
 
 table {
     margin: auto;
-    margin-top: 100px;
 }
 
 td {
@@ -21,4 +21,16 @@ td {
     width: fit-content;
     color: #145514;
     font-weight: bold;
+}
+
+.btn-change {
+    margin-left: 526px;
+    margin-bottom: 5px;
+    border-radius: 5px;
+    width: 110px;
+    background-color: #5f26a9;
+    color: white;
+    font-weight: bold;
+    font-size: 15p;
+    font-size: 15px;
 }

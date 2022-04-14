@@ -41,10 +41,27 @@ const COLOR = ["white", "#12900d", "#bf7c18", "#e4d618", "#5e59e4"];
 const Game = () => {
     const [table, setTable] = useState(null);
     const [index, setIndex] = useState(0);
+    const [gameMode, setGameMode] = useState("seriated");
+    const [randomHand, setRandomHand] = useState(null);
+    const [exactlyChoose, setExactlyChoose] = useState([]);
 
     useEffect(() => {
         createTable();
     }, []);
+
+    useEffect(() => {
+        while (true) {
+            let random = Math.floor(Math.random() * 32 + 1);
+            let checkPoint = true;
+            exactlyChoose.forEach((exactly) => {
+                if (exactly === random) checkPoint = false;
+            });
+            if (checkPoint) {
+                setRandomHand(random);
+                break;
+            }
+        }
+    }, [exactlyChoose]);
 
     const createTable = () => {
         const cards = [
@@ -82,25 +99,81 @@ const Game = () => {
     };
 
     const tapHand = (hand) => {
-        if (hand === HAND_SORT[index][0]) {
-            let array = [...table];
-            for (let i = 0; i < CARD_LENGTH; i++) {
-                for (let j = 0; j < CARD_LENGTH; j++) {
-                    if (hand === table[i][j][0]) {
-                        array[i][j][1] = HAND_SORT[index][1];
-                        setTable(array);
+        if (gameMode === "seriated") {
+            if (hand === HAND_SORT[index][0]) {
+                let array = [...table];
+                for (let i = 0; i < CARD_LENGTH; i++) {
+                    for (let j = 0; j < CARD_LENGTH; j++) {
+                        if (hand === table[i][j][0]) {
+                            array[i][j][1] = HAND_SORT[index][1];
+                            setTable(array);
+                        }
+                    }
+                }
+                setIndex(index + 1);
+            } else {
+                setIndex(0);
+                createTable();
+            }
+        } else {
+            let checkPoint = true;
+            for (let i = 0; i < HAND_SORT.length; i++) {
+                if (hand === HAND_SORT[i][0]) {
+                    if (i + 1 === randomHand) {
+                        for (let j = 0; j < 13; j++) {
+                            for (let k = 0; k < 13; k++) {
+                                if (hand === table[j][k][0]) {
+                                    checkPoint = false;
+                                    var array = [...table];
+                                    array[j][k][1] = HAND_SORT[i][1];
+                                    setTable(array);
+                                    var array2 = [...exactlyChoose];
+                                    array2.push(randomHand);
+                                    setExactlyChoose(array2);
+                                    console.log(exactlyChoose);
+                                    break;
+                                }
+                            }
+                        }
                     }
                 }
             }
-            setIndex(index + 1);
-        } else {
-            setIndex(0);
-            createTable();
+            if (checkPoint) {
+                setRandomHand(Math.floor(Math.random() * 32) + 1);
+                setIndex(0);
+                createTable();
+                setExactlyChoose([]);
+            }
         }
     };
 
     return (
         <div className="row">
+            {gameMode === "seriated" ? (
+                <button
+                    className="btn-change"
+                    onClick={() => {
+                        setRandomHand(Math.floor(Math.random() * 32) + 1);
+                        setGameMode("random");
+                        setIndex(0);
+                        createTable();
+                        setExactlyChoose([]);
+                    }}
+                >
+                    Seriated
+                </button>
+            ) : (
+                <button
+                    className="btn-change"
+                    onClick={() => {
+                        setGameMode("seriated");
+                        setIndex(0);
+                        createTable();
+                    }}
+                >
+                    {`Random: ${randomHand}`}
+                </button>
+            )}
             <table>
                 <tbody>
                     {table?.map((row) => {
@@ -127,9 +200,13 @@ const Game = () => {
                 </tbody>
             </table>
             <div className="text">
-                {index == 33
+                {gameMode === "seriated"
+                    ? index === 33
+                        ? "Congratulations! You will become a pro-player in the future"
+                        : `You have found ${index} strongest starting hands`
+                    : exactlyChoose.length == 33
                     ? "Congratulations! You will become a pro-player in the future"
-                    : `You have found ${index} strongest starting hands`}
+                    : `You have found ${exactlyChoose.length} strongest starting hands`}
             </div>
         </div>
     );
