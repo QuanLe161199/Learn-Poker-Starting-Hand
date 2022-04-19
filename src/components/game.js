@@ -38,6 +38,8 @@ const HAND_SORT = [
 
 const COLOR = ["white", "#12900d", "#bf7c18", "#e4d618", "#5e59e4"];
 
+const RANDOM_RANGE = 33;
+
 const Game = () => {
     const [table, setTable] = useState(null);
     const [index, setIndex] = useState(0);
@@ -50,15 +52,18 @@ const Game = () => {
     }, []);
 
     useEffect(() => {
-        while (true) {
-            let random = Math.floor(Math.random() * 32 + 1);
-            let checkPoint = true;
-            exactlyChoose.forEach((exactly) => {
-                if (exactly === random) checkPoint = false;
-            });
-            if (checkPoint) {
-                setRandomHand(random);
-                break;
+        console.log(exactlyChoose);
+        if (exactlyChoose.length !== RANDOM_RANGE) {
+            while (true) {
+                let random = Math.floor(Math.random() * RANDOM_RANGE + 1);
+                let checkPoint = true;
+                exactlyChoose.forEach((exactly) => {
+                    if (exactly === random) checkPoint = false;
+                });
+                if (checkPoint) {
+                    setRandomHand(random);
+                    break;
+                }
             }
         }
     }, [exactlyChoose]);
@@ -139,12 +144,34 @@ const Game = () => {
                 }
             }
             if (checkPoint) {
-                setRandomHand(Math.floor(Math.random() * 32) + 1);
                 setIndex(0);
                 createTable();
                 setExactlyChoose([]);
+                findTrueHand();
             }
         }
+    };
+
+    const findTrueHand = () => {
+        console.log(HAND_SORT[randomHand - 1]);
+        for (let i = 0; i < 13; i++) {
+            for (let j = 0; j < 13; j++) {
+                if (table[i][j][0] === HAND_SORT[randomHand - 1][0]) {
+                    var array = [...table];
+                    array[i][j][1] = HAND_SORT[randomHand - 1][1];
+                    setTable(array);
+                    setTimeout(() => {
+                        setRandomHand(
+                            Math.floor(Math.random() * RANDOM_RANGE) + 1
+                        );
+                        setIndex(0);
+                        createTable();
+                        setExactlyChoose([]);
+                    }, 1000);
+                }
+            }
+        }
+        console.log(table);
     };
 
     return (
@@ -153,7 +180,9 @@ const Game = () => {
                 <button
                     className="btn-change"
                     onClick={() => {
-                        setRandomHand(Math.floor(Math.random() * 32) + 1);
+                        setRandomHand(
+                            Math.floor(Math.random() * RANDOM_RANGE) + 1
+                        );
                         setGameMode("random");
                         setIndex(0);
                         createTable();
